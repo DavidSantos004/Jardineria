@@ -292,8 +292,32 @@ WHERE limite_credito=(
 );
 ```
 2. Devuelve el nombre del producto que tenga el precio de venta más caro.
+```sql
+SELECT nombre FROM producto 
+WHERE precio_venta=(
+    select max(precio_venta)from producto 
+);
+```
 3. Devuelve el nombre del producto del que se han vendido más unidades. (Tenga en cuenta que tendrá que calcular cuál es el número total de unidades que se han vendido de cada producto a partir de los datos de la tabla `detalle_pedido`)
+```sql
+SELECT pr.nombre FROM producto pr
+JOIN detalle_pedido dp ON pr.codigo_producto = dp.codigo_producto
+WHERE dp.cantidad=(
+    SELECT max(dp.cantidad) FROM detalle_pedido dp
+);
+```
+
 4. Los clientes cuyo límite de crédito sea mayor que los pagos que haya realizado. (Sin utilizar `INNER JOIN`).
+```sql
+SELECT c.nombre_cliente FROM cliente c
+WHERE c.limite_credito > (
+    SELECT max(p.total) FROM pago p
+    where c.codigo_cliente = p.codigo_cliente
+);
+
+```
+
+
 5. Devuelve el producto que más unidades tiene en stock.
 6. Devuelve el producto que menos unidades tiene en stock.
 7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de **Alberto Soria**.
