@@ -319,6 +319,13 @@ WHERE c.limite_credito > (
 
 
 5. Devuelve el producto que más unidades tiene en stock.
+```sql
+SELECT *
+FROM producto
+ORDER BY cantidad_en_stock DESC
+LIMIT 1;
+
+```
 6. Devuelve el producto que menos unidades tiene en stock.
 7. Devuelve el nombre, los apellidos y el email de los empleados que están a cargo de **Alberto Soria**.
 
