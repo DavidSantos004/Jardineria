@@ -381,7 +381,7 @@ ORDER BY p.nombre;
 #### 1.4.8.3 Subconsultas con IN y NOT IN
 
 1. Devuelve el nombre, apellido1 y cargo de los empleados que no representen a ningún cliente.
-
+```sql
 SELECT p.nombre, p.apellido1, p.puesto
 FROM empleado p
 WHERE p.codigo_empleado NOT IN (
@@ -389,9 +389,9 @@ WHERE p.codigo_empleado NOT IN (
     FROM cliente c
 )
 ORDER BY p.nombre;
-
+```
 2. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
-
+```sql
 SELECT c.*
 FROM cliente c
 WHERE c.codigo_cliente NOT IN (
@@ -399,9 +399,9 @@ WHERE c.codigo_cliente NOT IN (
     FROM pago p
 )
 ORDER BY c.nombre_cliente;
-
+```
 3. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
-
+```sql
 SELECT c.*
 FROM cliente c
 WHERE c.codigo_cliente IN (
@@ -409,9 +409,9 @@ WHERE c.codigo_cliente IN (
     FROM pago p
 )
 ORDER BY c.nombre_cliente;
-
+```
 4. Devuelve un listado de los productos que nunca han aparecido en un pedido.
-
+```sql
 SELECT p.*
 FROM producto p
 WHERE p.codigo_producto NOT IN (
@@ -419,9 +419,9 @@ WHERE p.codigo_producto NOT IN (
     FROM detalle_pedido d
 )
 ORDER BY p.nombre;
-
+```
 5. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos empleados que no sean representante de ventas de ningún cliente.
-
+```sql
 SELECT e.nombre, e.apellido1, e.apellido2, e.puesto, GROUP_CONCAT(o.telefono SEPARATOR ', ') AS telefono_oficina
 FROM empleado e, oficina o
 WHERE e.codigo_empleado NOT IN (
@@ -430,7 +430,7 @@ WHERE e.codigo_empleado NOT IN (
 )
 GROUP BY e.nombre, e.apellido1, e.apellido2, e.puesto
 ORDER BY e.nombre;
-
+```
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
 
 
