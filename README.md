@@ -432,17 +432,33 @@ GROUP BY e.nombre, e.apellido1, e.apellido2, e.puesto
 ORDER BY e.nombre;
 ```
 6. Devuelve las oficinas donde **no trabajan** ninguno de los empleados que hayan sido los representantes de ventas de algún cliente que haya realizado la compra de algún producto de la gama `Frutales`.
-
-
-
+```sql
+SELECT * FROM oficina WHERE codigo_oficina NOT IN (
+    SELECT DISTINCT codigo_oficina FROM empleado WHERE codigo_empleado IN (
+        SELECT DISTINCT codigo_empleado_rep_ventas FROM cliente WHERE codigo_cliente IN (
+            SELECT DISTINCT codigo_cliente FROM pedido WHERE codigo_pedido IN (
+                SELECT DISTINCT codigo_pedido FROM detalle_pedido dp, producto pd WHERE dp.codigo_producto = pd.codigo_producto AND LOWER(pd.gama) = 'Frutales'
+))));
+```
 7. Devuelve un listado con los clientes que han realizado algún pedido pero no han realizado ningún pago.
-
-
-
+```sql
+SELECT * FROM cliente WHERE codigo_cliente NOT IN (SELECT codigo_cliente FROM pago) AND codigo_cliente IN (SELECT codigo_cliente FROM pedido);
+```
 #### 1.4.8.4 Subconsultas con EXISTS y NOT EXISTS
 
 1. Devuelve un listado que muestre solamente los clientes que no han realizado ningún pago.
+```sql
+SELECT * FROM cliente c WHERE NOT EXISTS (SELECT codigo_cliente FROM pago p WHERE p.codigo_cliente = c.codigo_cliente);
+```
 2. Devuelve un listado que muestre solamente los clientes que sí han realizado algún pago.
+```sql
+SELECT * FROM cliente c WHERE EXISTS (SELECT codigo_cliente FROM pago p WHERE p.codigo_cliente = c.codigo_cliente);
+```
 3. Devuelve un listado de los productos que nunca han aparecido en un pedido.
+```sql
+SELECT * FROM producto pd WHERE NOT EXISTS (SELECT * FROM detalle_pedido dp WHERE dp.codigo_producto = pd.codigo_producto);
+```
 4. Devuelve un listado de los productos que han aparecido en un pedido alguna vez.
-
+```sql
+SELECT * FROM producto pd WHERE NOT EXISTS (SELECT * FROM detalle_pedido dp WHERE dp.codigo_producto = pd.codigo_producto);
+```
