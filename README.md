@@ -462,3 +462,113 @@ SELECT * FROM producto pd WHERE NOT EXISTS (SELECT * FROM detalle_pedido dp WHER
 ```sql
 SELECT * FROM producto pd WHERE NOT EXISTS (SELECT * FROM detalle_pedido dp WHERE dp.codigo_producto = pd.codigo_producto);
 ```
+
+# 5 TIPS con GROUP BY en SQL:
+
+1. multiple agrupamiento
+```sql
+SELECT p.nombre , gm.gama , COUNT(*) AS total FROM producto p
+JOIN gama_producto gm ON p.gama = gm.gama
+GROUP BY p.nombre , gm.gama;
+```
+2. Filtrar por aggregate functions
+```sql
+SELECT p.nombre , gm.gama , COUNT(*) AS total FROM producto p
+JOIN gama_producto gm ON p.gama = gm.gama
+GROUP BY p.nombre , gm.gama
+HAVING COUNT(*) > 5;
+```
+3. agrupado por funciones escalares
+```sql
+SELECT SUBSTRING(p.nombre, 1,1) as letrita , COUNT(*) AS total FROM producto p
+JOIN gama_producto gm ON p.gama = gm.gama
+GROUP BY SUBSTRING(p.nombre, 1,1)
+```
+4. Agrupado con UNION ALL
+```sql
+SELECT todo, COUNT(*) AS Total FROM 
+(SELECT concat('Gama: ', g.gama) AS todo FROM producto INNER JOIN gama_producto g ON g.gama = producto.gama UNION ALL SELECT CONCAT('Precios de Ventas: ', CAST(producto.precio_venta as char)) AS todo FROM producto) AS Tabla      
+GROUP BY todo;
+```
+5. concatenar resultados de agrupamiento
+```sql
+SELECT GROUP_CONCAT(p.nombre ORDER BY p.nombre DESC SEPARATOR ', ') AS nombres_productos
+FROM producto p
+JOIN gama_producto gm ON p.gama = gm.gama
+GROUP BY gm.gama;
+```
+# 5 TIPS con WHERE en SQL
+
+1. NOT IN
+```sql
+SELECT * 
+FROM producto
+WHERE gama = 'Herramientas'
+AND nombre NOT IN (
+    SELECT nombre
+    FROM producto
+    WHERE gama = 'Herramientas'
+);
+
+
+```
+2.
+```sql
+
+```
+3.
+```sql
+
+```
+4.
+```sql
+
+```
+5.
+```sql
+
+```
+# 5 TIPS con UPDATE en SQL
+
+1.
+```sql
+
+```
+2.
+```sql
+
+```
+3.
+```sql
+
+```
+4.
+```sql
+
+```
+5.
+```sql
+
+```
+# 5 TIPS con SELECT en SQL
+
+1.
+```sql
+
+```
+2.
+```sql
+
+```
+3.
+```sql
+
+```
+4.
+```sql
+
+```
+5.
+```sql
+
+```
