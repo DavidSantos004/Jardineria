@@ -499,76 +499,138 @@ GROUP BY gm.gama;
 ```
 # 5 TIPS con WHERE en SQL
 
-1. NOT IN
+1. Multiple agrupamiento: IN, NOT IN
 ```sql
-SELECT * 
-FROM producto
-WHERE gama = 'Herramientas'
-AND nombre NOT IN (
-    SELECT nombre
-    FROM producto
-    WHERE gama = 'Herramientas'
+SELECT * FROM empleado
+WHERE codigo_empleado IN (10, 20, 30, 40, 50);
+
+SELECT * FROM empleado
+WHERE codigo_empleado NOT IN (10, 20, 30, 40, 50);
+```
+2. Filtrar por aggregate function HAVING
+
+```sql
+SELECT nombre_cliente, COUNT(*)
+FROM cliente 
+GROUP BY nombre_cliente
+HAVING COUNT(*) < 10;
+```
+3.Subconsulta
+```sql
+SELECT *
+FROM oficina
+WHERE pais = (
+    SELECT pais
+    FROM oficina
+    WHERE codigo_oficina = 'BCN-ES'
 );
-
-
 ```
-2.
+4. REGEX
 ```sql
-
+SELECT *
+FROM empleado
+WHERE nombre REGEXP '^A';
 ```
-3.
+5.IN Y SUBCONSULTA
 ```sql
-
-```
-4.
-```sql
-
-```
-5.
-```sql
+SELECT *
+FROM cliente
+WHERE codigo_cliente IN (
+    SELECT DISTINCT codigo_cliente
+    FROM pedido
+    WHERE codigo_cliente IN (
+        SELECT codigo_cliente
+        FROM cliente
+        WHERE pais = 'Spain' OR pais = 'France'
+    )
+);
 
 ```
 # 5 TIPS con UPDATE en SQL
 
-1.
+1.Editar utilizando el valor ya guardado UPDATE , SET
 ```sql
+UPDATE cliente
+SET limite_credito = limite_credito * 1.10;
 
 ```
-2.
+2. Multiple agrupamiento
 ```sql
-
+UPDATE cliente
+SET limite_credito = DEFAULT;
 ```
 3.
 ```sql
+UPDATE cliente c
+SET c.limite_credito = (
+    SELECT SUM(p.total)
+    FROM pago p
+    WHERE p.codigo_cliente = c.codigo_cliente
+);
 
 ```
-4.
+4. Subconsultas en el WHERE
 ```sql
+SELECT *
+FROM cliente
+WHERE codigo_cliente IN (
+    SELECT codigo_cliente
+    FROM pedido
+    WHERE fecha_pedido >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+);
 
 ```
-5.
+5.UPDATE con JOIN
 ```sql
-
+UPDATE producto p
+JOIN (
+    SELECT codigo_producto, SUM(cantidad) AS total_vendido
+    FROM detalle_pedido
+    GROUP BY codigo_producto
+) d ON p.codigo_producto = d.codigo_producto
+SET p.cantidad_en_stock = p.cantidad_en_stock - d.total_vendido;
 ```
 # 5 TIPS con SELECT en SQL
 
-1.
+1. Valores directos
 ```sql
-
+INSERT INTO OTHER_TABLE(nombre_cliente, Status)
+SELECT nombre_cliente , 1 as ghost FROM cliente;
 ```
-2.
+2. operaciones con columnas
 ```sql
-
+SELECT cantidad_en_stock, precio_venta * precio_proveedor
+FROM producto;
 ```
-3.
+3. condiciones
 ```sql
+SELECT nombre,
+    cantidad_en_stock,
+    CASE 
+        WHEN cantidad_en_stock >= 100 THEN 'Alto stock'
+        WHEN cantidad_en_stock >= 50 THEN 'Stock medio'
+        ELSE 'Bajo stock'
+    END AS clasificacion_stock
+FROM producto;
 
 ```
 4.
 ```sql
+    SELECT nombre, precio_venta
+    FROM producto
+    WHERE precio_venta > (
+        SELECT AVG(precio_venta)
+        FROM producto
+    );
 
 ```
-5.
+5. consulta sobre subconsulta
 ```sql
-
+SELECT *
+FROM pedido
+WHERE codigo_cliente IN (
+    SELECT codigo_cliente
+    FROM cliente
+    WHERE estado = 'Entregado'
+);
 ```
